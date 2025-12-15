@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="UuidByString/UuidByString.csproj" Id="28a9a65b-5944-4979-b12c-3822bf7808ea" />
+  <Project Path="UuidByStringCreator/UuidByStringCreator.csproj" Id="afd4dc33-dfcd-4813-992d-a596d0ffff12" />
+</Solution>
