@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace UuidByStringCreator.Properties
+namespace StringToUuidGenerator.Properties
 {
 
 
