@@ -127,13 +127,13 @@ namespace UuidByString
         {
             var hexBuilder = new StringBuilder(36);
 
-            hexBuilder.Append(Uint8ArrayToHex(hashBuffer.Take(4).ToArray())).Append('-');
-            hexBuilder.Append(Uint8ArrayToHex(hashBuffer.Skip(4).Take(2).ToArray())).Append('-');
+            hexBuilder.Append(Uint8ArrayToHex([.. hashBuffer.Take(4)])).Append('-');
+            hexBuilder.Append(Uint8ArrayToHex([.. hashBuffer.Skip(4).Take(2)])).Append('-');
             hexBuilder.Append(Uint8ToHex((byte)(hashBuffer[6] & 0x0f | (byte)(version * 0x10))))
                 .Append(Uint8ToHex(hashBuffer[7])).Append('-');
             hexBuilder.Append(Uint8ToHex((byte)(hashBuffer[8] & 0x3f | 0x80))).Append(Uint8ToHex(hashBuffer[9]))
                 .Append('-');
-            hexBuilder.Append(Uint8ArrayToHex(hashBuffer.Skip(10).Take(6).ToArray()));
+            hexBuilder.Append(Uint8ArrayToHex([.. hashBuffer.Skip(10).Take(6)]));
 
             return hexBuilder.ToString();
         }
