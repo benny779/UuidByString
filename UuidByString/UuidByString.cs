@@ -10,11 +10,50 @@ namespace UuidByString
     public static class UuidByString
     {
         private static readonly char[] HexDigits = "0123456789abcdef".ToCharArray();
-        private static readonly byte[] EmptyByteArray = { };
+        private static readonly byte[] EmptyByteArray = [];
 
-        public static string GenerateUuid(string target, string @namespace = null, int version = 5)
+        /// <summary>
+        /// Generates UUID with default version 5 (SHA-1)
+        /// </summary>
+        /// <param name="target">The string to generate UUID from</param>
+        /// <returns>Generated UUID string</returns>
+        public static string GenerateUuid(string target)
         {
-            if (string.IsNullOrEmpty(target))
+            return GenerateUuid(target, null, 5);
+        }
+
+        /// <summary>
+        /// Generates UUID with specified version
+        /// </summary>
+        /// <param name="target">The string to generate UUID from</param>
+        /// <param name="version">Version of UUID (3 for MD5, 5 for SHA-1)</param>
+        /// <returns>Generated UUID string</returns>
+        public static string GenerateUuid(string target, int version)
+        {
+            return GenerateUuid(target, null, version);
+        }
+
+        /// <summary>
+        /// Generates UUID with namespace and default version 5 (SHA-1)
+        /// </summary>
+        /// <param name="target">The string to generate UUID from</param>
+        /// <param name="namespace">UUID namespace</param>
+        /// <returns>Generated UUID string</returns>
+        public static string GenerateUuid(string target, string @namespace)
+        {
+            return GenerateUuid(target, @namespace, 5);
+        }
+
+        /// <summary>
+        /// Generates UUID with namespace and specified version
+        /// </summary>
+        /// <param name="target">The string to generate UUID from</param>
+        /// <param name="namespace">UUID namespace</param>
+        /// <param name="version">Version of UUID (3 for MD5, 5 for SHA-1)</param>
+        /// <returns>Generated UUID string</returns>
+        public static string GenerateUuid(string target, string @namespace, int version)
+        {
+            if (target == null)
             {
                 throw new ArgumentNullException(nameof(target));
             }
