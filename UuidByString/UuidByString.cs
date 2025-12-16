@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -91,11 +89,43 @@ namespace UuidByString
                 throw new ArgumentException("Invalid UUID", nameof(uuid));
             }
 
+#if NET9
+            return ParseUuidSpan(uuid.AsSpan());
+#else
+            return ParseUuidLegacy(uuid);
+#endif
+        }
+
+#if NET9
+        private static byte[] ParseUuidSpan(ReadOnlySpan<char> uuid)
+        {
+            var buf = new byte[16];
+            var bufIndex = 0;
+
+            for (var i = 0; i < uuid.Length && bufIndex < 16; i++)
+            {
+                if (uuid[i] == '-')
+                {
+                    continue;
+                }
+
+                // Parse two hex digits directly
+                var high = HexCharToValue(uuid[i]);
+                var low = HexCharToValue(uuid[i + 1]);
+                buf[bufIndex++] = (byte)((high << 4) | low);
+                i++; // Skip the second hex digit
+            }
+
+            return buf;
+        }
+#else
+        private static byte[] ParseUuidLegacy(string uuid)
+        {
             var buf = new byte[16];
             var strIndex = 0;
             var bufIndex = 0;
 
-            while (strIndex < uuid.Length)
+            while (strIndex < uuid.Length && bufIndex < 16)
             {
                 if (uuid[strIndex] == '-')
                 {
@@ -103,14 +133,23 @@ namespace UuidByString
                     continue;
                 }
 
-                var oct = (uuid[strIndex].ToString() + uuid[strIndex + 1]).ToLower();
-                buf[bufIndex] = Convert.ToByte(oct, 16);
-
-                bufIndex++;
+                // Parse two hex characters directly without string allocation
+                var high = HexCharToValue(uuid[strIndex]);
+                var low = HexCharToValue(uuid[strIndex + 1]);
+                buf[bufIndex++] = (byte)((high << 4) | low);
                 strIndex += 2;
             }
 
             return buf;
+        }
+#endif
+
+        private static int HexCharToValue(char c)
+        {
+            if (c >= '0' && c <= '9') return c - '0';
+            if (c >= 'a' && c <= 'f') return c - 'a' + 10;
+            if (c >= 'A' && c <= 'F') return c - 'A' + 10;
+            return 0;
         }
 
         private static bool ValidateUuid(string uuid)
@@ -123,38 +162,47 @@ namespace UuidByString
             RegexOptions.Compiled | RegexOptions.IgnoreCase
         );
 
-        private static string HashToUuid(IList<byte> hashBuffer, int version)
+        private static string HashToUuid(byte[] hashBuffer, int version)
         {
             var hexBuilder = new StringBuilder(36);
 
-            hexBuilder.Append(Uint8ArrayToHex([.. hashBuffer.Take(4)])).Append('-');
-            hexBuilder.Append(Uint8ArrayToHex([.. hashBuffer.Skip(4).Take(2)])).Append('-');
-            hexBuilder.Append(Uint8ToHex((byte)(hashBuffer[6] & 0x0f | (byte)(version * 0x10))))
-                .Append(Uint8ToHex(hashBuffer[7])).Append('-');
-            hexBuilder.Append(Uint8ToHex((byte)(hashBuffer[8] & 0x3f | 0x80))).Append(Uint8ToHex(hashBuffer[9]))
-                .Append('-');
-            hexBuilder.Append(Uint8ArrayToHex([.. hashBuffer.Skip(10).Take(6)]));
+            // Direct byte indexing instead of LINQ operations
+            // First group: 8 hex chars (4 bytes)
+            AppendHexBytes(hexBuilder, hashBuffer, 0, 4);
+            hexBuilder.Append('-');
+
+            // Second group: 4 hex chars (2 bytes)
+            AppendHexBytes(hexBuilder, hashBuffer, 4, 2);
+            hexBuilder.Append('-');
+
+            // Third group: 4 hex chars (2 bytes) with version modification
+            AppendHexByte(hexBuilder, (byte)((hashBuffer[6] & 0x0f) | (version << 4)));
+            AppendHexByte(hexBuilder, hashBuffer[7]);
+            hexBuilder.Append('-');
+
+            // Fourth group: 4 hex chars (2 bytes) with variant modification
+            AppendHexByte(hexBuilder, (byte)((hashBuffer[8] & 0x3f) | 0x80));
+            AppendHexByte(hexBuilder, hashBuffer[9]);
+            hexBuilder.Append('-');
+
+            // Fifth group: 12 hex chars (6 bytes)
+            AppendHexBytes(hexBuilder, hashBuffer, 10, 6);
 
             return hexBuilder.ToString();
         }
 
-        private static string Uint8ToHex(byte uByte)
+        private static void AppendHexBytes(StringBuilder builder, byte[] bytes, int offset, int count)
         {
-            var first = uByte >> 4;
-            var second = uByte - (byte)(first << 4);
-
-            return $"{HexDigits[first]}{HexDigits[second]}";
-        }
-
-        private static string Uint8ArrayToHex(byte[] buf)
-        {
-            var hexBuilder = new StringBuilder(buf.Length * 2);
-            foreach (var b in buf)
+            for (var i = 0; i < count; i++)
             {
-                hexBuilder.Append(Uint8ToHex(b));
+                AppendHexByte(builder, bytes[offset + i]);
             }
+        }
 
-            return hexBuilder.ToString();
+        private static void AppendHexByte(StringBuilder builder, byte b)
+        {
+            builder.Append(HexDigits[b >> 4]);
+            builder.Append(HexDigits[b & 0x0F]);
         }
     }
 }

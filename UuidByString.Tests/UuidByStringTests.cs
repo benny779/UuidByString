@@ -162,35 +162,39 @@ namespace UuidByString.Tests
         }
 
         /// <summary>
-        /// Tests using reflection to test the private Uint8ToHex method
+        /// Tests using reflection to test the private AppendHexByte method
         /// </summary>
         [Test]
-        public void Uint8ToHex_ByteToHexConversion_ProducesCorrectResults()
+        public void AppendHexByte_ByteToHexConversion_ProducesCorrectResults()
         {
             var type = typeof(UuidByString);
-            var method = type.GetMethod("Uint8ToHex", BindingFlags.NonPublic | BindingFlags.Static);
-            Assert.IsNotNull(method, "Uint8ToHex method not found");
+            var method = type.GetMethod("AppendHexByte", BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.IsNotNull(method, "AppendHexByte method not found");
 
             foreach (var testCase in TestData.ByteToHexTestCases)
             {
                 var input = (byte)testCase[0];
                 var expected = (string)testCase[1];
-                var result = (string)method.Invoke(null, new object[] { input });
-                Assert.AreEqual(expected, result, $"Uint8ToHex({input}) should return '{expected}' but returned '{result}'");
+                var builder = new System.Text.StringBuilder();
+                method.Invoke(null, new object[] { builder, input });
+                var result = builder.ToString();
+                Assert.AreEqual(expected, result, $"AppendHexByte({input}) should return '{expected}' but returned '{result}'");
             }
         }
 
         /// <summary>
-        /// Tests using reflection to test the private Uint8ArrayToHex method
+        /// Tests using reflection to test the private AppendHexBytes method
         /// </summary>
         [Test]
-        public void Uint8ArrayToHex_ByteArrayToHexConversion_ProducesCorrectResults()
+        public void AppendHexBytes_ByteArrayToHexConversion_ProducesCorrectResults()
         {
             var type = typeof(UuidByString);
-            var method = type.GetMethod("Uint8ArrayToHex", BindingFlags.NonPublic | BindingFlags.Static);
-            Assert.IsNotNull(method, "Uint8ArrayToHex method not found");
+            var method = type.GetMethod("AppendHexBytes", BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.IsNotNull(method, "AppendHexBytes method not found");
 
-            var result = (string)method.Invoke(null, new object[] { TestData.TestByteArray });
+            var builder = new System.Text.StringBuilder();
+            method.Invoke(null, new object[] { builder, TestData.TestByteArray, 0, TestData.TestByteArray.Length });
+            var result = builder.ToString();
             Assert.AreEqual(TestData.TestByteArrayHex, result);
         }
 
