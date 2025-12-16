@@ -10,8 +10,16 @@
     <PackageVersion>1.0.0</PackageVersion>
     <Authors>Benny Shtemer</Authors>
     <Description>A .NET library for generating deterministic UUIDs from strings using MD5 (v3) or SHA1 (v5) hashing algorithms.</Description>
-    <PackageTags>uuid;guid;string;deterministic;hash</PackageTags>
+    <PackageTags>uuid;guid;string;deterministic;hash;md5;sha1;namespace;generator</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/benny779/UuidByString</PackageProjectUrl>
     <RepositoryUrl>https://github.com/benny779/UuidByString</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
+    <Copyright>Copyright (c) 2025 Benny Shtemer</Copyright>
+    <PackageReleaseNotes>Initial release - Port of uuid-by-string npm package for .NET</PackageReleaseNotes>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
@@ -26,5 +34,10 @@
   <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0'">
     <DefineConstants>$(DefineConstants);NET9</DefineConstants>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
 </Project>

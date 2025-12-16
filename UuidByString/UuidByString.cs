@@ -5,6 +5,10 @@ using System.Text.RegularExpressions;
 
 namespace UuidByString
 {
+    /// <summary>
+    /// Provides methods for generating deterministic RFC-4122 Name-Based UUIDs from strings.
+    /// Supports UUID version 3 (MD5) and version 5 (SHA-1).
+    /// </summary>
     public static class UuidByString
     {
         private static readonly char[] HexDigits = "0123456789abcdef".ToCharArray();

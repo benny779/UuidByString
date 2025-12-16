@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("UuidByString")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("A .NET library for generating deterministic UUIDs from strings using MD5 (v3) or SHA1 (v5) hashing algorithms.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Benny Shtemer")]
 [assembly: AssemblyProduct("UuidByString")]
-[assembly: AssemblyCopyright("Copyright ©  2025")]
+[assembly: AssemblyCopyright("Copyright © 2025 Benny Shtemer")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
