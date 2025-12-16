@@ -49,6 +49,9 @@ if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE
 }
 
+# extra cleanup to ensure no residual files
+Get-ChildItem -Path ".\bin", ".\obj" -Recurse | Remove-Item -force -recurse
+
 # Build and pack the project
 Write-Info "Building and packing project..."
 dotnet build UuidByString\UuidByString.csproj -c $Configuration
