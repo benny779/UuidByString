@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using UuidByString;
 
 namespace StringToUuidGenerator
 {
@@ -29,7 +30,7 @@ namespace StringToUuidGenerator
 
             tbUuid.Text = null;
 
-            var uuid = UuidByString.UuidByString.GenerateUuid(input);
+            var uuid = UuidGenerator.GenerateUuid(input);
 
             tbUuid.Text = uuid;
 

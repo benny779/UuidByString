@@ -22,12 +22,21 @@ dotnet add package UuidByString
 
 The package provides static methods to generate UUIDs. The method receives any string and returns a generated hash.
 
-### Basic Usage (Version 5 / SHA-1)
+### Regular Using
 
 ```csharp
 using UuidByString;
 
-string uuid = UuidByString.GenerateUuid("Hello world!");
+string uuid = UuidGenerator.GenerateUuid("Hello world!");
+// d3486ae9-136e-5856-bc42-212385ea7970
+```
+
+### Static Using
+
+```csharp
+using static UuidByString.UuidGenerator;
+
+string uuid = GenerateUuid("Hello world!");
 // d3486ae9-136e-5856-bc42-212385ea7970
 ```
 
@@ -39,11 +48,11 @@ You can specify the UUID version. Available versions are 3 and 5 according to [R
 
 ```csharp
 // Version 3 (MD5)
-string uuidV3 = UuidByString.GenerateUuid("Hello world!", 3);
+string uuidV3 = UuidGenerator.GenerateUuid("Hello world!", 3);
 // 86fb269d-190d-3c85-b6e0-468ceca42a20
 
 // Version 5 (SHA-1) - explicit
-string uuidV5 = UuidByString.GenerateUuid("Hello world!", 5);
+string uuidV5 = UuidGenerator.GenerateUuid("Hello world!", 5);
 // d3486ae9-136e-5856-bc42-212385ea7970
 ```
 
@@ -51,10 +60,10 @@ string uuidV5 = UuidByString.GenerateUuid("Hello world!", 5);
 
 ```csharp
 // With namespace
-string uuid = UuidByString.GenerateUuid("Hello world!", "my-namespace");
+string uuid = UuidGenerator.GenerateUuid("Hello world!", "my-namespace");
 
 // With namespace and version
-string uuid = UuidByString.GenerateUuid("Hello world!", "my-namespace", 3);
+string uuid = UuidGenerator.GenerateUuid("Hello world!", "my-namespace", 3);
 ```
 
 ## API
