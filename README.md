@@ -16,7 +16,7 @@ dotnet add package UuidByString
 
 - .NET Framework 4.0
 - .NET Framework 4.8
-- .NET 9.0
+- .NET 8.0
 
 ## Usage
 
