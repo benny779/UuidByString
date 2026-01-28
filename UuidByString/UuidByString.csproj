@@ -7,7 +7,7 @@
     <AssemblyName>UuidByString</AssemblyName>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>UuidByString</PackageId>
-    <PackageVersion>2.0.0</PackageVersion>
+    <PackageVersion>2.0.1</PackageVersion>
     <Authors>Benny Shtemer</Authors>
     <Description>A .NET library for generating deterministic UUIDs from strings using MD5 (v3) or SHA1 (v5) hashing algorithms.</Description>
     <PackageTags>uuid;guid;string;deterministic;hash;md5;sha1;namespace;generator</PackageTags>
